@@ -22,32 +22,69 @@ function playRound(humanChoice, computerChoice) {
     // 1. Paper beats Rock
     // 2. Rock beats scissors
     // 3. Scissors beats Paper
+    // if a tie occurs, retry the round until different results
 
     let winner;
     let loser;
     let state;
+    let score; // true if human wins and false if computer wins
 
     humanChoice = humanChoice.toLowerCase();
     computerChoice = computerChoice.toLowerCase();
+
+    while (humanChoice == computerChoice) {
+        alert("A tie occured. Press 'OK' to try this round again.")
+        humanChoice = getHumanChoice();
+        computerChoice = getComputerChoice();
+    }
 
     if (humanChoice == "paper" && computerChoice == "rock" ||
         humanChoice == "rock" && computerChoice == "scissors" ||
         humanChoice == "scissors" && computerChoice == "paper"
     ) {
-        humanScore++;
+        score = true;
         winner = humanChoice;
         loser = computerChoice;
         state = "win";
     }
     else  {
-        computerScore++;
+        score = false;
         winner = computerChoice;
         loser = humanChoice;
         state = "lose";
     }
 
     console.log(`You ${state}! ${winner.at(0).toUpperCase() + winner.substring(1)} beats ${loser.at(0).toUpperCase() + loser.substring(1)}`);
+    return score;
 }
 
-let humanScore = 0;
-let computerScore = 0;
+function playGame() {
+    let humanScore = 0;
+    let computerScore = 0;
+
+    alert("Welcome to a game of 'Rock, Paper, Scissors'! This game would have 5 rounds. Click 'OK' to continue!");
+
+    for (let i = 1; i <= 5; i++) {
+        console.log("Round " + i);
+        let score = playRound(getHumanChoice(), getComputerChoice());
+        if (score) humanScore++;
+        else computerScore++;        
+    }
+
+    let winner, loser, winScore, loseScore;
+    if (humanScore > computerScore) {
+        winner = "You"; 
+        loser = "Computer"; 
+        winScore = humanScore;
+        loseScore = computerScore;
+    } else {
+        winner = "Computer"; 
+        loser = "You"; 
+        winScore = computerScore;
+        loseScore = humanScore;
+    }
+    
+    console.log(`At the end of the five rounds: \nWinner: ${winner} (${winScore} points)\nLoser: ${loser} (${loseScore} points)`);
+}
+
+playGame();
